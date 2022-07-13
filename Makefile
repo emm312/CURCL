@@ -1,14 +1,14 @@
-SOURCES = ${wildcard src/*.c}
+SOURCES = ${wildcard src/*.cpp}
 OBJS = ${SOURCES:.c=.o}
 
-CXX = gcc
+CXX = g++
 
 CFLAGS = -I./include -O2 -Wall -g --static
 
 curcl: $(OBJS)
 	$(CXX) $(CFLAGS) obj/*.o -o $@
 
-%.o: %.c
+%.o: %.cpp
 	$(CXX) $(CFLAGS) -c $< -o obj/$(notdir $@)
 
 clean:
