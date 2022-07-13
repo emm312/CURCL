@@ -1,5 +1,5 @@
 SOURCES = ${wildcard src/*.cpp}
-OBJS = ${SOURCES:.c=.o}
+OBJS = ${SOURCES:.cpp=.o}
 
 CXX = g++
 

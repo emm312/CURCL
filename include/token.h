@@ -1,16 +1,17 @@
 #ifndef TOKEN_H
 #define TOKEN_H
+#include  <string>
 enum TokenTypes {
     TT_INSTRUCTION,
     TT_IMMEDIATE,
     TT_LABEL,
+    TT_DW,
 };
-typedef enum TokenTypes TokenTypes;
 
 struct Token {
     TokenTypes type;
-    char* value;
+    std::string value;
+    unsigned int lineno;
 };
-typedef struct Token Token;
 
 #endif
