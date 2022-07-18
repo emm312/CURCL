@@ -4,6 +4,8 @@
 #include <string.h>
 #include <vector>
 #include <iostream>
+#include <fstream>
+#include <util.h>
 
 std::string enumToStr(TokenTypes tok) {
     switch (tok) {
@@ -22,10 +24,31 @@ std::string enumToStr(TokenTypes tok) {
 }
 
 
-int main() {
-    std::string code = "ADD R1 R2 R3 r1";
-    std::vector<Token> tokens = tokenise(code);
-    std::cout << tokens.size() << '\n';
+int main(int argc, char* argv[]) {
+    std::ifstream inputFileStream(argv[1]);
+    std::string str;
+    std::string src;
+	while(std::getline(inputFileStream, str))
+	{
+		auto _toks = split(str, ' ');
+		
+		for (auto tok: _toks)
+		{
+			tok = replace(tok, "\t", "");
+
+			src += tok + ' ';
+		}
+
+		src += '\n';
+	}
+    inputFileStream.close();
+
+    std::cout << src << std::endl;
+
+    std::vector<Token> tokens = tokenise(src);
+
+
+    
     for (Token token : tokens) {
         std::cout << enumToStr(token.type) << " " << token.value << " " << "\n";
     }

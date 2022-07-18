@@ -20,6 +20,16 @@ std::vector<std::string> getWords(std::string code) {
 }
 
 
+bool isNumber(const std::string& str)
+{
+    for (char const &c : str) {
+        if (std::isdigit(c) == 0) return false;
+    }
+    return true;
+}
+
+
+
 std::vector<Token> tokenise(std::string code) {
     std::vector<Token> toRet;
     std::vector<std::string> words = getWords(code);
@@ -50,12 +60,25 @@ std::vector<Token> tokenise(std::string code) {
             token.value = word;
             token.type = TT_REG;
             toRet.push_back(token);
+        } else if (word[0] == '.' || word[1] == '.') {
+            token.value = word;
+            token.type = TT_LABEL;
+            toRet.push_back(token);
+        } else if (word[0] == '#') {
+            token.value = word;
+            token.type = TT_MEM;
+            toRet.push_back(token);
+        } else if (word == "\n" || word == "\r" || word == "\t" || word == "\r\n") {
+            continue;
         } else {
-
-            std::cout << "Unknown token: " << word << '\n';
+            if (isNumber(word)) {
+                token.value = word;
+                token.type = TT_IMMEDIATE;
+                toRet.push_back(token);
+            } else {
+                std::cout << "Unknown token: " << word << std::endl;
+            }
         }
     }
-    
-
     return toRet;
 }
