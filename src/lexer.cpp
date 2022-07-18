@@ -2,67 +2,60 @@
 #include <token.h>
 #include <vector>
 #include <string>
-#include <cctype>
 #include <iostream>
-#include <bits/stdc++.h>
+
+std::vector<std::string> getWords(std::string code) {
+    std::vector<std::string> toRet;
+    std::string buf;
+    for (char codeChar : code) {
+        if (codeChar == ' ' || codeChar == '\n' || codeChar == '\t' || codeChar == '\r') {
+            toRet.push_back(buf);
+            buf = "";
+            continue;
+        } else {
+            buf += codeChar;
+        }
+    }
+    return toRet;
+}
 
 
 std::vector<Token> tokenise(std::string code) {
-    unsigned int line_number;
-    bool isDW = false;
-    std::string buffer;
-    std::vector<Token> tokens;
-    bool isBuffering = false;
-    for (char character : code) {
-        character = std::tolower(character);
+    std::vector<Token> toRet;
+    std::vector<std::string> words = getWords(code);
 
-        std::vector<std::string> instructions;
-        instructions.push_back("add");
-        instructions.push_back("rsh");
-        instructions.push_back("lod");
-        instructions.push_back("str");
-        instructions.push_back("bge");
-        instructions.push_back("nor");
-        instructions.push_back("imm");
-        instructions.push_back("in");
-        instructions.push_back("out");
-        instructions.push_back("dw");
-        if (isBuffering) {
-            if (isDW) {
-            buffer += character;
-            } else if (character == ']') {
-                isDW = false;
-                tokens.push_back(Token{TT_DW, buffer, line_number});
-            }
-            else if (character == '\n') {
-                line_number++;
-                if (isDW) {
-                    std::cerr << "Not a valid DW instruction" << "\n";
-                    exit(-1);
-                }
-                isDW = false;
-                buffer = "";
-                isBuffering = false;
-            }
-        }
-        if (character == '\n') {
-            line_number++;
-            if (isDW) {
-                std::cerr << "Not a valid DW instruction" << "\n";
-                exit(-1);
-            }
-            isDW = false;
-            buffer = "";
-        } else if (character == '[') {
-            isDW = true;
-        } else if (character == ' ') {
-            continue;
-        } /* check if a instruction is in the buffer */ else if (std::find(instructions.begin(), instructions.end(), buffer) != instructions.end()) {
-            tokens.push_back(Token{TT_INSTRUCTION, buffer, line_number});
-            buffer = "";
+    for (std::string word : words) {
+        Token token;
+        if (word == "ADD") {
+            token.value = "ADD";
+            token.type = TT_INSTRUCTION;
+            toRet.push_back(token);
+        } else if (word == "SUB") {
+            token.value = "SUB";
+            token.type = TT_INSTRUCTION;
+            toRet.push_back(token);
+        } else if (word == "MUL") {
+            token.value = "MUL";
+            token.type = TT_INSTRUCTION;
+            toRet.push_back(token);
+        } else if (word == "DIV") {
+            token.value = "DIV";
+            token.type = TT_INSTRUCTION;
+            toRet.push_back(token);
+        } else if (word == "AND") {
+            token.value = "AND";
+            token.type = TT_INSTRUCTION;
+            toRet.push_back(token);
+        } else if (word[0] == 'R' || word[0] == '$') {
+            token.value = word;
+            token.type = TT_REG;
+            toRet.push_back(token);
         } else {
-            isBuffering = true;
-        } 
+
+            std::cout << "Unknown token: " << word << '\n';
+        }
     }
-    return tokens;
+    
+
+    return toRet;
 }

@@ -6,12 +6,13 @@ enum TokenTypes {
     TT_IMMEDIATE,
     TT_LABEL,
     TT_DW,
+    TT_REG,
+    TT_MEM,
 };
 
 struct Token {
     TokenTypes type;
     std::string value;
-    unsigned int lineno;
 };
 
 #endif
